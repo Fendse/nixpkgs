@@ -2983,6 +2983,12 @@
       fingerprint = "6AB3 7A28 5420 9A41 82D9  0068 910A CB9F 6BD2 6F58";
     }];
   };
+  Fendse = {
+    email = "46252070+Fendse@users.noreply.github.com";
+    github = "Fendse";
+    githubId = 46252070;
+    name = "Sara Johnsson";
+  };
   ffinkdevs = {
     email = "fink@h0st.space";
     github = "ffinkdevs";
