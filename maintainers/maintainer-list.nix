@@ -2793,6 +2793,12 @@
     githubId = 541748;
     name = "Felipe Espinoza";
   };
+  Fendse = {
+    email = "46252070+Fendse@users.noreply.github.com";
+    github = "Fendse";
+    githubId = 46252070;
+    name = "Sara Johnsson";
+  };
   ffinkdevs = {
     email = "fink@h0st.space";
     github = "ffinkdevs";

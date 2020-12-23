@@ -25357,6 +25357,8 @@ in
 
   ue4demos = recurseIntoAttrs (callPackage ../games/ue4demos { });
 
+  unreal-world = callPackage ../games/unreal-world { };
+
   ut2004Packages = dontRecurseIntoAttrs (callPackage ../games/ut2004 { });
 
   ut2004demo = res.ut2004Packages.ut2004 [ res.ut2004Packages.ut2004-demo ];
