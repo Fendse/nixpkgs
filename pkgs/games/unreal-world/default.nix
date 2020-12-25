@@ -1,8 +1,8 @@
 {fetchurl, stdenv, autoPatchelfHook, makeDesktopItem, writeScriptBin,
  gcc-unwrapped, SDL2, SDL2_image, SDL2_mixer, SDL2_net,
- system ? stdenv.hostPlatform.system
 }:
 let version = "3.62";
+    system = stdenv.hostPlatform.system;
 in
   stdenv.mkDerivation {
     pname = "unreal_world";
@@ -14,6 +14,11 @@ in
         else if system == "x86_64-linux" then "95f21bafc3c64c52b3c3251637452ff2c3fd257a723b7ebcfbfe5a8ac6bb9ed6"
         else throw "Unsupported platform ${system}";
     };
+
+    nativeBuildInputs = [
+      tree
+    ];
+
     buildInputs = [
       autoPatchelfHook
     ];
@@ -26,20 +31,40 @@ in
       SDL2_net
     ];
 
-    wrapper = ./launcher.bash;
-
-    desktopItem = makeDesktopItem {
-      name = "unreal-world";
-      exec = "unreal-world";
-      desktopName = "UnReal World";
-    };
+    patches = [
+      ./launcher.patch
+      ./desktop.patch
+    ];
 
     installPhase = ''
-      mkdir -p "$out/share/unreal-world" "$out/bin" "$out/share/applications"
-      mv -- * "$out/share/unreal-world"
-      substituteAll "$wrapper" "$out/bin/urw"
+      # .desktop file
+      mkdir -p -- "$out/share/applications"
+      mv -- ubuntu/urw.desktop "$out/share/applications"
+
+      # icons
+      mkdir -p -- "$out/share/icons/hicolor"
+      find ubuntu/pixmaps -type f -print0 | while IFS= read -r -d $'\0' file;
+      do
+        if resolution="$(grep -Po '(?<=-)\d+(?=\.png$)' <<<"$file")"
+        then
+          target="$out/share/icons/hicolor/$resolution/apps"
+          mkdir -p -- "$target"
+          mv -- "$file" "$target/urwicon.png"
+        fi
+      done
+      rmdir ubuntu/pixmaps
+
+      # launcher
+      substituteAllInPlace "ubuntu/urw"
+      mkdir -p -- "$out/bin"
+      mv -- ubuntu/urw "$out/bin/urw"
       chmod a=rx "$out/bin/urw"
-      substituteAll "$desktopItem/share/applications/unreal-world.desktop" "$out/share/applications/unreal-world.desktop"
+
+      rmdir ubuntu
+
+      # and then the rest
+      mkdir -p -- "$out/share/unreal-world"
+      mv --target-directory="$out/share/unreal-world" -- *
     '';
 
     meta = {
