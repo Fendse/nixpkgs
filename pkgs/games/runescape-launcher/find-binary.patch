@@ -1,0 +1,8 @@
+--- i/usr/bin/runescape-launcher
++++ w/usr/bin/runescape-launcher
+@@ -15,4 +15,4 @@ export PULSE_LATENCY_MSEC=100
+ #export MESA_GL_VERSION_OVERRIDE=3.0
+ 
+ unset XMODIFIERS
+-/usr/share/games/runescape-launcher/runescape --configURI $configURI $@
++@out@/share/games/runescape-launcher/runescape --configURI $configURI $@
